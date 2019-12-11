@@ -25,6 +25,10 @@ namespace AuthIds.server
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddIdentityServer()
+                .AddInMemoryClients(Config.Clients)
+                .AddInMemoryApiResources(Config.Apis)
+                .AddInMemoryIdentityResources(Config.Ids);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,6 +47,7 @@ namespace AuthIds.server
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseIdentityServer();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
