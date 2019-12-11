@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <environment include="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    </environment>
+    <environment exclude="Development">
+        <script src="~/lib/js/jquery-3.3.1.min.js"></script>
+        <script src="~/lib/js/bootstrap.bundle.min.js"></script>
+    </environment>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+
+</head>
+<body class="hold-transition skin-blue-light sidebar-mini" >
+    <div class="wrapper">
+        <header class="main-header">
+            <a href="/" class="logo">
+                <span class="logo-mini"><b>Authentifcation</b>S</span>
+            </a>
+            <nav class="navbar navbar-static-top">
+                <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                    <span class="sr-only">Toggle navigation</span>
+                </a>
+                <div class="navbar-custom-menu">
+                    <ul class="nav navbar-nav">
+
+                        <li>
+                            <a href="/Account/Logout"><i class="fa fa-sign-out"> Se déconnecter</i></a>
+                        </li>
+                        <li>
+                            <a href="/Home"><i class="fa fa-sign-out">Home</i></a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <div class="content-wrapper">
+            <section class="content">
+                @Html.AntiForgeryToken()
+                @RenderBody()
+            </section>
+        </div>
+        <footer class="main-footer">
+            <div class="pull-right hidden-xs">
+                <b>Version</b> @ViewBag.AppVersion [@ViewBag.AppInformationalVersion]
+            </div>
+          
+        </footer>
+    </div>
+</body>
+</html>
