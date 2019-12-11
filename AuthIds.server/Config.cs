@@ -11,7 +11,7 @@ namespace AuthIds.server
         public static IEnumerable<ApiResource> Apis =>
               new List<ApiResource>
               {
-                    new ApiResource("clientApi", "My Client API")
+                    new ApiResource("protectedApi", "My API to prtect")
               };
 
         // clients to w'll be use ressources and to be secure
