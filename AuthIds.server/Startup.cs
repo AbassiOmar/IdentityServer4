@@ -48,6 +48,7 @@ namespace AuthIds.server
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseIdentityServer();
+            app.UseAuthentication();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
