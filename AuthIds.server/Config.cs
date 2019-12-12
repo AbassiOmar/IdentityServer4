@@ -26,7 +26,7 @@ namespace AuthIds.server
 
             AllowedGrantTypes = GrantTypes.ClientCredentials,
             // scopes that client has access to
-            AllowedScopes = { "clientApi" }
+            AllowedScopes = { "protectedApi" }
         },
         // interactive ASP.NET Core MVC client
         new Client

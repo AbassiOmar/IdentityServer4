@@ -26,6 +26,7 @@ namespace AuthIds.server
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddIdentityServer()
+                 .AddDeveloperSigningCredential()
                 .AddInMemoryClients(Config.Clients)
                 .AddInMemoryApiResources(Config.Apis)
                 .AddInMemoryIdentityResources(Config.Ids);
