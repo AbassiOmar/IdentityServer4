@@ -21,7 +21,6 @@ namespace ConsoleAppClient
 
             // get the identity token 
             // clientID = client the client id is registred in Config.cs in identityServer scope is the alloed scop 
-            // for this 
             var tokenResponse = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
             {
                 Address = disco.TokenEndpoint,
