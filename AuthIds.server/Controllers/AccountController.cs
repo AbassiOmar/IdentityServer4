@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using AuthIds.server.Models;
+using IdentityModel;
 using IdentityServer4.Events;
+using IdentityServer4.Extensions;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
 using IdentityServer4.Test;
@@ -108,10 +110,29 @@ namespace AuthIds.server.Controllers
         }
 
         [HttpGet]
-        public async Task Logout()
+        public async Task<IActionResult> Logout(string logoutId)
         {
-            await HttpContext.SignOutAsync("Cookies");
-            await HttpContext.SignOutAsync(OpenIdConnectDefaults.AuthenticationScheme);
+            var vm = await this.BuildLogoutViewModelAsync(logoutId);
+            return await this.Logout(vm);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout(LogoutViewModel model)
+        {
+
+            var vm = await this.BuildLoggedOutViewModelAsync(model.LogoutId);
+            await this.HttpContext.SignOutAsync();
+
+            var user = this.HttpContext.User;
+
+            if (user?.Identity.IsAuthenticated == true)
+            {
+                await this.events.RaiseAsync(new UserLogoutSuccessEvent(user.GetSubjectId(), user.GetDisplayName()));
+                this.logger.LogInformation($"Logout : {user.GetDisplayName()}");
+            }
+
+            return this.View("LoggedOut", vm);
         }
 
         private async Task<LoginViewModel> BuildLoginViewModelAsync(LoginViewModel model)
@@ -123,6 +144,42 @@ namespace AuthIds.server.Controllers
                 ReturnUrl = model.ReturnUrl,
                 Login = model.Login,
                 RememberLogin = model.RememberLogin,
+            };
+        }
+
+        private async Task<LogoutViewModel> BuildLogoutViewModelAsync(string logoutId)
+        {
+            var vm = new LogoutViewModel { LogoutId = logoutId };
+
+            if (User?.Identity.IsAuthenticated != true)
+            {
+                // if the user is not authenticated, then just show logged out page
+                return vm;
+            }
+
+            var context = await interaction.GetLogoutContextAsync(logoutId);
+            if (context?.ShowSignoutPrompt == false)
+            {
+                // it's safe to automatically sign-out
+                return vm;
+            }
+
+            // show the logout prompt. this prevents attacks where the user
+            // is automatically signed out by another malicious web page.
+            return vm;
+        }
+
+        private async Task<LoggedOutViewModel> BuildLoggedOutViewModelAsync(string logoutId)
+        {
+
+            var logout = await this.interaction.GetLogoutContextAsync(logoutId);
+
+            return new LoggedOutViewModel
+            {
+                PostLogoutRedirectUri = logout?.PostLogoutRedirectUri,
+                ClientName = logout?.ClientId,
+                SignOutIframeUrl = logout?.SignOutIFrameUrl,
+                LogoutId = logoutId
             };
         }
     }
