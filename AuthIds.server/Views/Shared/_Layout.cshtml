@@ -1,9 +1,19 @@
-﻿<!DOCTYPE html>
+﻿@using IdentityServer4.Extensions
+@{
+    string name = null;
+    if (!true.Equals(ViewData["signed-out"]))
+    {
+        name = Context.User?.GetDisplayName();
+    }
+}
+
+<!DOCTYPE html>
 
 <html>
 <head>
     <environment include="Development">
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/lib/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/css/site.css" />
     </environment>
     <environment exclude="Development">
         <script src="~/lib/js/jquery-3.3.1.min.js"></script>
@@ -13,42 +23,55 @@
     <title>@ViewBag.Title</title>
 
 </head>
-<body class="hold-transition skin-blue-light sidebar-mini">
-    <div class="wrapper">
-        <header class="main-header">
-            <a href="/" class="logo">
-                <span class="logo-mini"><b>Authentifcation</b>S</span>
-            </a>
-            <nav class="navbar navbar-static-top">
-                <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
-                    <span class="sr-only">Toggle navigation</span>
-                </a>
-                <div class="navbar-custom-menu">
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <header class="main-header">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a href="~/">
+                        <span class="navbar-brand">
+                            <img src="~/icon.png" class="icon-banner">
+                            IdentityServer4
+                        </span>
+                    </a>
+                </div>
+                @if (!string.IsNullOrWhiteSpace(name))
+                {
                     <ul class="nav navbar-nav">
-
-                        <li>
-                            <a href="/Account/Logout"><i class="fa fa-sign-out"> Se déconnecter</i></a>
-                        </li>
-                        <li>
-                            <a href="/Home"><i class="fa fa-sign-out">Home</i></a>
+                        <li class="dropdown">
+                            <ul class="dropdown-menu">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">@name <b class="caret"></b></a>
+                                <li>
+                                    <a asp-action="Logout" asp-controller="Account">Logout</a>
+                                </li>
+                                <li>
+                                    <a href="/Home"><i class="fa fa-sign-out">Home</i></a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
-                </div>
-            </nav>
-        </header>
-        <div class="content-wrapper">
-            <section class="content">
-                @Html.AntiForgeryToken()
-                @RenderBody()
-            </section>
+                }
+            </header>
         </div>
-        <footer class="main-footer">
-            <div class="pull-right hidden-xs">
-
-            </div>
-
-        </footer>
     </div>
+    <div class="body-center">
+        @Html.AntiForgeryToken()
+        @RenderBody()
+    </div>
+    <footer class="main-footer">
+        <div class="pull-right hidden-xs">
+
+        </div>
+
+    </footer>
+    <script src="~/lib/jquery/jquery.js"></script>
+    <script src="~/lib/bootstrap/js/bootstrap.js"></script>
     @RenderSection("scripts", required: false)
 </body>
 </html>
