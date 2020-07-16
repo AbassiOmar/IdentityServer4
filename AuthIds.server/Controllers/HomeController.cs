@@ -4,10 +4,12 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using AuthIds.server.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuthIds.server.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         public IActionResult Index()
