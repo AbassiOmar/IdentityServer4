@@ -1,12 +1,21 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
+using AuthIds.server.CustomStoreApi.Rpositories;
+using AuthIds.server.ICustomStoreApis.Repositories;
+using AuthIds.server.Services;
+using IdentityServer4.EntityFramework.DbContexts;
+using IdentityServer4.EntityFramework.Mappers;
+using IdentityServer4.Services;
+using IdentityServer4.Validation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,20 +25,31 @@ namespace AuthIds.server
     {
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            this.configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        public IConfiguration configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            string connectionString = this.configuration.GetConnectionString("AuthIDS");
+            var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
+
+            services.AddControllersWithViews();
+
+            services.AddTransient<IResourceOwnerPasswordValidator, ResourceOwnerPasswordValidator>();
+            services.AddTransient<IProfileService, ProfileService>();
+            services.AddTransient<IUserRepository, UserRepository>();
+
             services.AddIdentityServer()
                  .AddDeveloperSigningCredential()
-                .AddInMemoryClients(Config.Clients)
-                .AddInMemoryApiResources(Config.Apis)
-                .AddInMemoryIdentityResources(Config.Ids);
+                 .AddClientStore<ClientStore>()
+                 .AddResourceStore<ResourceStore>()
+                 .AddCorsPolicyService<CorsPolicyService>()
+                 .AddDeviceFlowStore<DeviceFlowStore>()
+                 .AddPersistedGrantStore<PersistedGrantStore>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,14 +68,15 @@ namespace AuthIds.server
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseRouting();
             app.UseIdentityServer();
             app.UseAuthentication();
-            app.UseMvc(routes =>
+            app.UseAuthorization();
+            app.UseEndpoints(endpoints =>
             {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapDefaultControllerRoute();
             });
         }
+
     }
 }

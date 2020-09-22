@@ -1,17 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.572
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthIds.server", "AuthIds.server\AuthIds.server.csproj", "{BA144D66-E406-42C5-9FAD-AEF3CA5CE9A8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ProtectedApis", "ProtectedApis", "{5ACC0CD3-D74D-4044-904C-A7EB0B2A6182}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProtectedApi", "ProtectedApi\ProtectedApi.csproj", "{D54877A1-7B33-43BD-8201-8DC85E4C6920}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProtectedApi", "ProtectedApi\ProtectedApi.csproj", "{D54877A1-7B33-43BD-8201-8DC85E4C6920}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ClientApplications", "ClientApplications", "{73AFF2A8-163A-4B50-BBD4-E2D2B54FF2DE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleAppClient", "ConsoleAppClient\ConsoleAppClient.csproj", "{7FBBF99C-B3FE-411A-B2C0-28846CB7118A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleAppClient", "ConsoleAppClient\ConsoleAppClient.csproj", "{7FBBF99C-B3FE-411A-B2C0-28846CB7118A}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "AuthIds.DataBase", "AuthIds.DataBase\AuthIds.DataBase.sqlproj", "{349D82DE-8454-4F75-9F98-6F8398798AA0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +33,12 @@ Global
 		{7FBBF99C-B3FE-411A-B2C0-28846CB7118A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7FBBF99C-B3FE-411A-B2C0-28846CB7118A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7FBBF99C-B3FE-411A-B2C0-28846CB7118A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{349D82DE-8454-4F75-9F98-6F8398798AA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{349D82DE-8454-4F75-9F98-6F8398798AA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{349D82DE-8454-4F75-9F98-6F8398798AA0}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{349D82DE-8454-4F75-9F98-6F8398798AA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{349D82DE-8454-4F75-9F98-6F8398798AA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{349D82DE-8454-4F75-9F98-6F8398798AA0}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

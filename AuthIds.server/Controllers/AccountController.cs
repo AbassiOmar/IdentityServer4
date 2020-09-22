@@ -70,7 +70,7 @@ namespace AuthIds.server.Controllers
                 if (this.users.ValidateCredentials(model.Login, model.Password))
                 {
                     var user = this.users.FindByUsername(model.Login);
-                    await this.events.RaiseAsync(new UserLoginSuccessEvent(user.Username, user.SubjectId, user.Username, clientId: context?.ClientId));
+                    await this.events.RaiseAsync(new UserLoginSuccessEvent(user.Username, user.SubjectId, user.Username));
                     AuthenticationProperties props = null;
 
                     if (model.RememberLogin)
@@ -82,7 +82,8 @@ namespace AuthIds.server.Controllers
                         };
                     }
 
-                    await HttpContext.SignInAsync(user.SubjectId, user.Username, props);
+                    await HttpContext.SignInAsync(user.SubjectId, null, props);
+                   // await HttpContext.SignInAsync(user.SubjectId, user.Username, props);
                     if (context != null)
                     {
                         return Redirect(model.ReturnUrl);
