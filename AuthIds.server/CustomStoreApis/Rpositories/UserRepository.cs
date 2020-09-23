@@ -2,6 +2,9 @@
 using AuthIds.server.CustomStoreApis.Rpositories;
 using AuthIds.server.ICustomStoreApis.Repositories;
 using AuthIds.server.Models;
+using Dapper;
+using System.Data;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AuthIds.server.CustomStoreApi.Rpositories
@@ -17,35 +20,36 @@ namespace AuthIds.server.CustomStoreApi.Rpositories
 
         public async Task<User> FindAsync(string userName)
         {
-            var user = new User()
+            using(IDbConnection dbconn =this.Connection )
             {
-                UserId=1111,
-                Login = "aaa",
-                FirstName = "abassi",
-                LastName = "omar",
-                PasseWord = "0000",
-            };
 
-            return  user;
+                var query = @"SELECT * FROM Utilisateur where FirstName = @userName";
+                dbconn.Open();
+
+                var res = await dbconn.QueryAsync<User>(query, new { @userName = userName });
+                return res.FirstOrDefault();
+            }
         }
 
         public async  Task<User> FindByIdAsync(long userId)
         {
-             var user = new User()
+            using (IDbConnection dbconn = this.Connection)
             {
-                UserId = 1111,
-                Login = "aaa",
-                FirstName = "abassi",
-                LastName = "omar",
-                PasseWord = "0000",
-            };
 
-            return user;
+                var query = @"SELECT * FROM User where userId = @userId";
+                dbconn.Open();
+
+                var res = await dbconn.QueryAsync<User>(query, new { userId = userId });
+                return res.FirstOrDefault();
+            }
         }
 
-        public Task<bool> ValidatePassword(long userId)
+        public async Task<bool> ValidatePassword(string userName, string passeWord)
         {
-            throw new System.NotImplementedException();
+            var user = await FindAsync(userName);
+            if (user == null) return false;
+            if (string.Equals(passeWord, user.PasseWord)) return true;
+            return false;
         }
     }
 }

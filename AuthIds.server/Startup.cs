@@ -4,7 +4,10 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using AuthIds.server.CustomStoreApi.Rpositories;
+using AuthIds.server.CustomStoreApis.Infrastructure;
+using AuthIds.server.CustomStoreApis.Services;
 using AuthIds.server.ICustomStoreApis.Repositories;
+using AuthIds.server.ICustomStoreApis.Services;
 using AuthIds.server.Services;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Mappers;
@@ -35,13 +38,16 @@ namespace AuthIds.server
         {
             string connectionString = this.configuration.GetConnectionString("AuthIDS");
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
-
+            services.Configure<ConnectionOptions>(this.configuration.GetSection("ConnectionStrings"));
             services.AddControllersWithViews();
-
+            services.AddTransient<UserService>();
+            services.AddSingleton<ConnectionStringFactory>();
             services.AddTransient<IResourceOwnerPasswordValidator, ResourceOwnerPasswordValidator>();
             services.AddTransient<IProfileService, ProfileService>();
+            services.AddTransient<IUtilisateurService, UtilisateurService>();
             services.AddTransient<IUserRepository, UserRepository>();
-
+            services.AddTransient<IUserRepository, UserRepository>();
+     
             services.AddIdentityServer()
                  .AddDeveloperSigningCredential()
                  .AddClientStore<ClientStore>()

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using AuthIds.server.Models;
+using AuthIds.server.Services;
 using IdentityModel;
 using IdentityServer4.Events;
 using IdentityServer4.Extensions;
@@ -28,19 +29,23 @@ namespace AuthIds.server.Controllers
         private readonly TestUserStore users;
         private readonly IEventService events;
         private readonly IClientStore clientStore;
+        private readonly UserService userService;
 
         public AccountController(
           ILogger<AccountController> logger,
           IIdentityServerInteractionService interaction,
            IEventService events,
            IClientStore clientStore,
-        TestUserStore users = null)
+           UserService userService,
+        TestUserStore users = null
+        )
         {
             this.interaction = interaction;
             this.logger = logger;
             this.users = users ?? new TestUserStore(TestUsers.Users);
             this.events = events;
             this.clientStore = clientStore;
+            this.userService = userService;
         }
 
         [HttpGet]
@@ -67,9 +72,16 @@ namespace AuthIds.server.Controllers
             {
                 model.ReturnUrl = HttpUtility.UrlDecode(model.ReturnUrl);
                 this.logger.LogInformation($"Login : {model.Login}");
+
+                if(await this.userService.ValidateUserAsync(model.Login,model.Password))
+                {
+                    var user1 = await this.userService.FindByUsername(model.Login);
+
+                }
                 if (this.users.ValidateCredentials(model.Login, model.Password))
                 {
                     var user = this.users.FindByUsername(model.Login);
+
                     await this.events.RaiseAsync(new UserLoginSuccessEvent(user.Username, user.SubjectId, user.Username));
                     AuthenticationProperties props = null;
 

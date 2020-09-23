@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace AuthIds.server.CustomStoreApis.Infrastructure
 {
-    public class ConnectionOpstions
+    public class ConnectionOptions
     {
-        public string ConnectionStringAuthIDS { get; set; }
+        public string AuthIDS { get; set; }
     }
 }

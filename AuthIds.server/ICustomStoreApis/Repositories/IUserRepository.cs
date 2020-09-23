@@ -12,6 +12,6 @@ namespace AuthIds.server.ICustomStoreApis.Repositories
 
         public Task<User> FindByIdAsync(long userId);
 
-        public Task<bool> ValidatePassword(long userId); 
+        public Task<bool> ValidatePassword(string userId,string passWord); 
     }
 }
